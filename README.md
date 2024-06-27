@@ -13,10 +13,10 @@
 <br />
 <div align="center">
 
-<h3 align="center">Kotlin-On-Clound-Deploy</h3>
+<h3 align="center">Kotlin-On-Cloud-Deploy</h3>
 
   <p align="center">
-    The deploy on a docker/kubernets enviroment version of a Kotlin application that uses (Kotlin + Retrofit + Resilience4j + Coroutines + Kotest + MockK) to implement unit tests and async functions - reference from: <a href="https://cursos.alura.com.br/course/kotlin-aplicacoes-resilientes-assincronas">Async Kotlin Apps Course</a> + <a href="https://cursos.alura.com.br/course/kotlin-preparando-aplicacao-cloud">Kotlin On Cloud</a>
+    The deploy on a docker/kubernets environment version of a Kotlin application that uses (Kotlin + Retrofit + Resilience4j + Coroutines + Kotest + MockK) to implement unit tests and async functions - reference from: <a href="https://cursos.alura.com.br/course/kotlin-aplicacoes-resilientes-assincronas">Async Kotlin Apps Course</a> + <a href="https://cursos.alura.com.br/course/kotlin-preparando-aplicacao-cloud">Kotlin On Cloud</a>
   </p>
 </div>
 
@@ -68,6 +68,9 @@ Necessary tools to deploy and test the app:
 - [K3D](https://k3d.io/v5.6.3/)
 - Maven
 - Git
+- Grafana
+- Prometheus
+- RedHat Openshift Sandbox **(only in deploy cases)**
 
 ### Deploying / Testing
 
@@ -260,6 +263,7 @@ Necessary tools to deploy and test the app:
         port: 6379
    ```
    ```yaml
+   ### prod profiles
    spring:
    datasource:
      driverClassName: com.mysql.cj.jdbc.Driver
@@ -271,7 +275,7 @@ Necessary tools to deploy and test the app:
    redis:
     host: ${REDIS_HOST}
    ```
-7. With a configured and logged DockerHub account, create a image and puhs it to your profile repo
+7. With a configured and logged DockerHub account, create an image and push it to your profile repo
    ```bash
       docker image -t build [App Name]:[Version tag]
       docker tag [Hash] [DockerHub username]/[App Name]:[Version tag]
@@ -291,11 +295,67 @@ Necessary tools to deploy and test the app:
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Test the deploy @ <a href="http://route-car-service-test-1pdrsant-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/cars">OpenShift Sandbox</a>, should return:
+Test the deployment @ <a href="http://route-car-service-test-1pdrsant-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/cars">OpenShift Sandbox</a>, should return:
 
 ![image](https://github.com/P-py/Kotlin-On-Cloud-Deploy/assets/68572810/d081882b-5f62-48d4-b2f3-24117b23da03)
 
+Considering that OpenShift limits the free-trial users on the Sandbox application on the observability side, you **won't** be able to deploy and test the Spring Actuator, Prometheus and Grafana solutions to measure metrics on that environment.
 
+However, you can run the application **LOCALLY** and test it. To do it, these are the steps:
+1. Certify the <a href=https://spring.io/guides/gs/actuator-service>Spring Actuator</a> and <a href="https://prometheus.io/">Prometheus</a> dependencies are installed @ [pom.xml](pom.xml) and **THE PROJECT IS RUNNING LOCALLY** successfully without errors 
+2. Test the actuator making a request @ http://localhost:8080/actuator, should return something like:
+   ![Spring Actuator Demo](README_assets/actuator-demo.png)
+3. You can check the base health configs requesting a GET @ http://localhost:8080/actuator/health:
+   ```json
+   {
+      "status":"UP"
+   }
+   ```
+4. Edit the dev-profile to configure the actuator and prometheus
+   ```yaml
+   ### dev profiles
+   spring:
+      datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/car
+        username: ###
+        password: ###
+      cache:
+        type: redis
+      redis:
+        host: localhost
+        port: 6379
+   management:
+    endpoint:
+      health:
+        show-details: always
+    endpoints:
+      web:
+        exposure:
+          include: 'health, prometheus'
+   ```
+5. Now, testing the http://localhost:8080/actuator/health will return a **more complex and complete json**, and the most important change comes with the **prometheus endpoint being available** @ http://localhost:8080/actuator/prometheus
+6. Create a `prometheus.yaml` file in the root directory of the project
+   ```yaml
+   global:
+      scrape_interval: [Time in seconds]
+      evaluation_interval: [Time in seconds] 
+   scrape_configs:
+      - job_name: 'prometheusJob'
+        scrape_interval: [Time in seconds]
+        static_configs:
+          - targets: ['localhost:9090'] # Prometheus default port
+      - job_name:
+        scrape_interval: 5s
+        metrics_path: 'actuator/prometheus'
+        static_configs:
+          - targets: [Application default port] # 8080 for this case
+   ```
+7. Download and run the <a href="https://grafana.com/">Grafana</a> application.
+8. Click in "Add a new data source", select the **Prometheus** option. Enter the local address where prometheus is running http://localhost:9090
+9. Click in "Start & Test" blue button. Follow creating a dashboard with a basic query <a href="https://prometheus.io/docs/visualization/grafana/">(refer to the documentation in case you need some help.)</a>
+10. You should now have a dashboard **somewhat like** this:
+![Grafana+Prometheus](README_assets/grafana-prometheus-demo.png)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
@@ -332,16 +392,6 @@ Pedro Santos - pedrosalviano170@gmail.com
 Project Link: [https://github.com/P-py/Kotlin-On-Cloud-Deploy](https://github.com/P-py/Kotlin-On-Cloud-Deploy)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-### TO-DO / NOT AVALIABLE YET
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->

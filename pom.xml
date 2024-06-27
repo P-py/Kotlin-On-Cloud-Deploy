@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
-		<kotlin.version>1.6.21</kotlin.version>
+		<kotlin.version>1.7.10</kotlin.version>
 		<testcontainers.version>1.17.2</testcontainers.version>
 	</properties>
 	<dependencies>
@@ -55,7 +55,6 @@
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -76,7 +75,6 @@
 			<artifactId>mysql</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/io.mockk/mockk -->
 		<dependency>
 			<groupId>io.mockk</groupId>
@@ -84,35 +82,30 @@
 			<version>1.12.5</version>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit -->
 		<dependency>
 			<groupId>com.squareup.retrofit2</groupId>
 			<artifactId>retrofit</artifactId>
 			<version>2.9.0</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson -->
 		<dependency>
 			<groupId>com.squareup.retrofit2</groupId>
 			<artifactId>converter-gson</artifactId>
 			<version>2.9.0</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-circuitbreaker -->
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
 			<artifactId>resilience4j-circuitbreaker</artifactId>
 			<version>1.7.1</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-retrofit -->
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
 			<artifactId>resilience4j-retrofit</artifactId>
 			<version>1.7.1</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core -->
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
@@ -120,7 +113,6 @@
 			<version>1.6.4</version>
 			<type>pom</type>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/io.kotest/kotest-runner-junit5-jvm -->
 		<dependency>
 			<groupId>io.kotest</groupId>
@@ -134,7 +126,16 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
