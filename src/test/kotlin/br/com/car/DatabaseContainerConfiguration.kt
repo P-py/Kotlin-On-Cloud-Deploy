@@ -12,10 +12,10 @@ abstract class DatabaseContainerConfiguration {
 
     companion object {
         @Container
-        private val mysqlContainer = MySQLContainer<Nothing>("mysql:latest").apply {
+        private val mysqlContainer = MySQLContainer<Nothing>("mysql:8.2.0").apply {
             withDatabaseName("testdb")
-            withUsername("joao")
-            withPassword("12345")
+            withUsername("root")
+            withPassword("root")
         }
 
         @Container
@@ -30,7 +30,7 @@ abstract class DatabaseContainerConfiguration {
             registry.add("spring.datasource.password", mysqlContainer::getPassword)
             registry.add("spring.datasource.username", mysqlContainer::getUsername)
 
-            registry.add("spring.redis.host", redisContainer::getContainerIpAddress)
+            registry.add("spring.redis.host", redisContainer::getHost)
             registry.add("spring.redis.port", redisContainer::getFirstMappedPort)
         }
     }

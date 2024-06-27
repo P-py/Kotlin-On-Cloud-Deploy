@@ -6,6 +6,7 @@ target/
 
 ### Resources ###
 ./src/main/resources/*
+./src/main/kotlin/br/com/car/k8s/*
 
 ### STS ###
 .apt_generated

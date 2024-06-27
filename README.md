@@ -65,15 +65,230 @@ Deployed on <a href="https://www.redhat.com/en/technologies/cloud-computing/open
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### TO-DO / NOT AVAILABLE YET
+Necessary tools to deploy and test the app:
+- Docker Engine (could be Docker Desktop)
+- [K3D](https://k3d.io/v5.6.3/)
+- Maven
+- Git
 
-### Installation
+### Deploying / Testing
 
-### TO-DO / NOT AVAILABLE YET
-
+1. Clone the project
+    ```bash
+    git clone https://github.com/P-py/Kotlin-On-Cloud-Deploy.git
+    ```
+2. Enter the main directory 
+3. Create the folder k8s in the main/kotlin/br/com/car/
+   ```bash
+   cd Kotlin-On-Cloud-Deploy/src/main/kotlin/br/com/car/
+   mkdir k8s
+   ```
+5. Create a folder for each dependency of the project
+   ```bash
+   mkdir app, ingress, mysql, redis
+   ```
+4. Configure the .yaml files used for the project deploy via k3d/kubernetes
+   - Main app
+   ```yaml
+   ### Deployment
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: ###
+    spec:
+      selector:
+        matchLabels:
+          app: ###
+      template:
+        metadata:
+          labels:
+            app: ###
+        spec:
+          containers:
+            - name: ###
+              image: [DockerHub user]/[App Name]:[Tag version]
+              ports:
+                - containerPort: ###
+              env:
+                - name: MYSQL_HOST
+                  value: ###
+                - name: MYSQL_DATABASE
+                  value: ###
+                - name: MYSQL_PASSWORD
+                  value: ###
+                - name: MYSQL_USERNAME
+                  value: ###
+                - name: REDIS_HOST
+                  value: ###
+   ```
+   ```yaml
+   ### Service
+   apiVersion: v1
+   kind: Service
+   metadata:
+      name: ###
+   spec:
+      selector:
+        app: ###
+      ports:
+        - port: ###
+      type: NodePort
+   ```
+   - Ingress
+   ```yaml
+   ###ingress.yaml
+   apiVersion: networking.k8s.io/v1
+   kind: Ingress
+   metadata:
+      name: ###
+   spec:
+      rules:
+        - http:
+            paths:
+              - path: ###
+                pathType: ###
+                backend: 
+                  service:
+                    name: ###
+                    port:
+                      number: ###
+   ```
+   - MySQL
+   ```yaml
+   ### Deployment
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+      name: mysql
+      labels:
+        app: mysql
+        tier: database
+   spec:
+      selector:
+        matchLabels:
+          app: mysql
+      template:
+        metadata:
+          labels:
+            app: mysql
+            tier: database
+        spec:
+          containers:
+            - name: mysqldb-image
+              image: mysql:[Version]
+              env:
+                - name: MYSQL_ROOT_PASSWORD
+                  value: ###
+                - name: MYSQL_DATABASE
+                  value: ###
+              ports:
+                - containerPort: ###
+                  name: mysql
+   ```
+   ```yaml
+   ### Service
+   apiVersion: v1
+   kind: Service
+   metadata:
+    name: mysql
+    labels:
+      app: mysql
+      tier: database
+    spec:
+      selector:
+        app: mysql
+        tier: database
+      ports:
+        - port: ###
+          targetPort: ###
+      clusterIP: ###
+   ```
+   - Redis
+   ```yaml
+   ### Deployment
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+    name: redis
+   spec:
+      selector:
+        matchLabels:
+          app: redis
+      template:
+        metadata:
+          labels:
+            app: redis
+        spec:
+          containers:
+            - name: redis-image
+              image: redis:bullseye
+              ports:
+                - containerPort: ###
+                  name: ###
+   ```
+   ```yaml
+   ### Service
+   apiVersion: v1
+   kind: Service
+   metadata: 
+      name: redis
+   spec:
+      selector:
+        app: redis
+      ports:
+        - port: ###
+          targetPort: ###
+      clusterIP: ###
+   ```
+6. Create the resources for the docker container in the main/resources dir
+   ```yaml
+   ### application
+   spring:
+      profiles:
+        active: @activatedProperties@
+   ```
+   ```yaml
+   ### dev profiles
+   spring:
+      datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/car
+        username: ###
+        password: ###
+      cache:
+        type: redis
+      redis:
+        host: localhost
+        port: 6379
+   ```
+   ```yaml
+   spring:
+   datasource:
+     driverClassName: com.mysql.cj.jdbc.Driver
+     url: jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}
+     username: ${MYSQL_USERNAME}
+     password: ${MYSQL_PASSWORD}
+   cache:
+     type: redis
+   redis:
+    host: ${REDIS_HOST}
+   ```
+7. With a configured and logged DockerHub account, create a image and puhs it to your profile repo
+   ```bash
+      docker image -t build [App Name]:[Version tag]
+      docker tag [Hash] [DockerHub username]/[App Name]:[Version tag]
+      docker push [DockerHub username]/[App Name]:[Version tag]
+   ```
+8. Create the kubernetes locally 
+   ```bash
+      k3d cluster create --port ###:###@loadbalancer
+      ### In the k8s folder
+      kubectl apply -f ./mysql/
+      kubectl apply -f ./redis/
+      kubectl apply -f ./ingress/
+      kubectl apply -f ./app/
+   ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
