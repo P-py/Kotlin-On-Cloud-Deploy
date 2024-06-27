@@ -1,5 +1,3 @@
-<a name="readme-top"></a>
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -58,7 +56,7 @@
 
 The application was developed using Hexagonal Architecture, to access examples and know more click <a href="https://beyondxscratch.com/2020/08/23/hexagonal-architecture-example-digging-a-spring-boot-implementation/">here.</a>
 
-Deployed on <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift">RedHat OpenShift</a>
+Deployed on <a href="[https://www.redhat.com/en/technologies/cloud-computing/openshift](http://route-car-service-test-1pdrsant-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/cars)">RedHat OpenShift</a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -293,19 +291,12 @@ Necessary tools to deploy and test the app:
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-### TO-DO / NOT AVAILIABLE YET
+Test the deploy @ <a href="http://route-car-service-test-1pdrsant-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/cars">OpenShift Sandbox</a>, should return:
+
+![image](https://github.com/P-py/Kotlin-On-Cloud-Deploy/assets/68572810/d081882b-5f62-48d4-b2f3-24117b23da03)
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-### TO-DO / NOT AVALIABLE YET
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
